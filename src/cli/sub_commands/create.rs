@@ -27,12 +27,12 @@ pub fn create(i18n_path: &str, lang: &str) {
         lang_file.to_str().expect("The path it's non-UTF-8").bold();
     if lang_file.exists() {
         eprintln!(
-            "{}: '{}' is already exists.",
+            "{}: '{}' is already exists 🗂️",
             "Error".red(),
             colored_file_path
         );
     } else if let Err(err) = write(lang_file, "{}") {
-        eprintln!("{}: {}", "Error".red(), err);
+        eprintln!("{}: {} 💻", "Error".red(), err);
     } else {
         println!(
             "Creating '{}' successfully ✅",
