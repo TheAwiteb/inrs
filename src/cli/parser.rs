@@ -25,6 +25,7 @@ use clap::Parser;
 pub struct App {
     /// Path of i18n directory 📂
     #[clap(short, long, validator = validate_i18n_path)]
+    // FEATURE/TODO: Make path optional and search in current directory or config file
     pub path: String,
     #[clap(subcommand)]
     pub action: Subcommands,

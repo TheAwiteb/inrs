@@ -39,7 +39,7 @@ OPTIONS:
     -p, --path <PATH>    Path of i18n directory 📂
 
 SUBCOMMANDS:
-    create    Create new languge file 🔤
+    create    Create new language file 🔤
     help      Print this message or the help of the given subcommand(s)
 
 ```
