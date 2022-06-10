@@ -15,6 +15,7 @@
 //     You should have received a copy of the GNU General Public License
 //     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+use std::fs::read_dir;
 use std::path::Path;
 
 type VResult = Result<(), String>;
@@ -27,6 +28,39 @@ pub fn validate_i18n_path(path: &str) -> VResult {
     } else if !i18n_dir.is_dir() {
         Err("It should be a directory 📂".to_owned())
     } else {
-        Ok(())
+        if let Ok(entries) = read_dir(i18n_dir) {
+            // Check if all files are json file
+            for entry in entries {
+                if let Ok(entry) = entry {
+                    if let Ok(file_type) = entry.file_type() {
+                        if !file_type.is_dir() {
+                            if let Some(str_entry) = entry.file_name().to_str() {
+                                if str_entry.strip_suffix(".json").is_some() {
+                                    // Accept
+                                } else {
+                                    return Err(
+                                        format!("'{str_entry}' is not a json file ( translation file should be json file) 📁")
+                                    );
+                                }
+                            } else {
+                                return Err(format!(
+                                    "Invalid json file name '{:?}' 🚫",
+                                    entry.path()
+                                ));
+                            }
+                        } else {
+                            return Err(format!("i18n directory should not contain directory but {entry:?} is directory 🚫"));
+                        }
+                    } else {
+                        return Err(format!("Cannot get file type of {:?} 🚫", entry.path()));
+                    }
+                } else {
+                    return Err(format!("Cannot read entry {entry:?} 🚫"));
+                }
+            }
+            Ok(())
+        } else {
+            return Err("Cannot read the i18n directory 📁".to_owned());
+        }
     }
 }
