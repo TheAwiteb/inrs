@@ -16,6 +16,9 @@
 //     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 mod create;
+mod utils;
+
+pub mod errors;
 
 use clap::Subcommand;
 
@@ -24,13 +27,12 @@ pub use create::create;
 #[derive(Debug, Subcommand)]
 /// i18nrs sub commands
 pub enum Subcommands {
-    /// Create new languge file 🔤
+    /// Create new language file 🔤
     Create {
-        /// The languge name 🔤
+        /// The language name 🔤
         #[clap(short, long)]
         lang: String,
     },
-    // TODO: Add command
     // TODO: Update command
     // TODO: Delete command
     // TODO: Config command
