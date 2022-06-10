@@ -15,28 +15,23 @@
 //     You should have received a copy of the GNU General Public License
 //     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-use colored::{ColoredString, Colorize};
-use std::fs::write;
-use std::path::Path;
+use super::utils::Translations;
+use colored::Colorize;
 
 /// Create new translation file in i18n directory
 pub fn create(i18n_path: &str, lang: &str) {
-    let i18n_dir = Path::new(i18n_path);
-    let lang_file = i18n_dir.join(lang).with_extension("json");
-    let colored_file_path: ColoredString =
-        lang_file.to_str().expect("The path it's non-UTF-8").bold();
-    if lang_file.exists() {
-        eprintln!(
-            "{}: '{}' is already exists 🗂️",
-            "Error".red(),
-            colored_file_path
-        );
-    } else if let Err(err) = write(lang_file, "{}") {
-        eprintln!("{}: {} 💻", "Error".red(), err);
-    } else {
-        println!(
-            "Creating '{}' successfully ✅",
-            colored_file_path.normal().green()
-        );
-    };
+    match Translations::new(i18n_path) {
+        Ok(mut translation) => {
+            if let Err(err) = translation.add_language(lang) {
+                eprintln!("{}: {} 🚫", err.name().red(), err.msg());
+            } else {
+                if let Err(err) = translation.export() {
+                    eprintln!("{}: {} 🚫", err.name().red(), err.msg());
+                } else {
+                    println!("Creating '{}' language successfully ✅", lang.green());
+                }
+            }
+        }
+        Err(err) => eprintln!("{}: {} 🚫", err.name().red(), err.msg()),
+    }
 }
