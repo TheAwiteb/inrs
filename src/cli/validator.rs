@@ -15,6 +15,7 @@
 //     You should have received a copy of the GNU General Public License
 //     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+use colored::Colorize;
 use std::fs::read_dir;
 use std::path::Path;
 
@@ -65,4 +66,16 @@ pub fn validate_i18n_path(path: &str) -> VResult {
     } else {
         Err("Cannot read the i18n directory 📁".to_owned())
     }
+}
+
+/// Validate the name of language
+pub fn validate_lang_name(lang_name: &str) -> VResult {
+    if lang_name.contains('.') {
+        return Err(format!(
+            "'{}' is invalid name, did you means {}",
+            lang_name.red(),
+            lang_name.split('.').next().unwrap().green()
+        ));
+    }
+    Ok(())
 }
