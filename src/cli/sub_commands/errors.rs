@@ -7,7 +7,6 @@ pub enum I18nError {
     NonUtf8LanguageName(String),
     ParseJsonError(String),
     WriteOnFileError(String),
-    AlreadyExistingKey(String),
 }
 
 impl I18nError {
@@ -21,7 +20,6 @@ impl I18nError {
             Self::NonUtf8LanguageName(s) => s,
             Self::ParseJsonError(s) => s,
             Self::WriteOnFileError(s) => s,
-            Self::AlreadyExistingKey(s) => s,
         }
     }
 
@@ -35,7 +33,6 @@ impl I18nError {
             Self::NonUtf8LanguageName(_) => "NonUtf8LanguageName",
             Self::ParseJsonError(_) => "ParseJsonError",
             Self::WriteOnFileError(_) => "WriteOnFileError",
-            Self::AlreadyExistingKey(_) => "AlreadyExistingKey",
         }
     }
 }

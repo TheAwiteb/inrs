@@ -17,11 +17,15 @@
 
 mod cli;
 
-use cli::sub_commands::{create, Subcommands};
+use cli::sub_commands::{create, update, Subcommands};
 
 fn main() {
     let app = cli::parse();
     match app.action {
         Subcommands::Create { lang } => create(&app.path, &lang),
+        Subcommands::Update { lang, key, trans } => update(
+            &app.path,
+            (lang.as_str(), key.as_str(), trans.as_str()).into(),
+        ),
     };
 }
