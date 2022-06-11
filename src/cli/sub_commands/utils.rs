@@ -153,3 +153,13 @@ impl Translations {
         Ok(())
     }
 }
+
+impl<'a> From<(&'a str, &'a str, &'a str)> for Translation<'a> {
+    fn from((lang_name, key, translation): (&'a str, &'a str, &'a str)) -> Self {
+        Self {
+            lang_name,
+            key,
+            translation,
+        }
+    }
+}
