@@ -12,21 +12,21 @@ pub enum I18nError {
 
 impl I18nError {
     /// Returns the error message
-    pub fn msg<'a>(&'a self) -> &'a str {
+    pub fn msg(&self) -> &str {
         match self {
-            Self::NonExistingLanguage(s) => &s,
-            Self::AlreadyExistingLanguage(s) => &s,
-            Self::ReadI18nDirectoryError(s) => &s,
-            Self::ReadLanguageFileError(s) => &s,
-            Self::NonUtf8LanguageName(s) => &s,
-            Self::ParseJsonError(s) => &s,
-            Self::WriteOnFileError(s) => &s,
-            Self::AlreadyExistingKey(s) => &s,
+            Self::NonExistingLanguage(s) => s,
+            Self::AlreadyExistingLanguage(s) => s,
+            Self::ReadI18nDirectoryError(s) => s,
+            Self::ReadLanguageFileError(s) => s,
+            Self::NonUtf8LanguageName(s) => s,
+            Self::ParseJsonError(s) => s,
+            Self::WriteOnFileError(s) => s,
+            Self::AlreadyExistingKey(s) => s,
         }
     }
 
     /// Returns the error name
-    pub fn name<'a>(&'a self) -> &'a str {
+    pub fn name(&self) -> &str {
         match self {
             Self::NonExistingLanguage(_) => "NonExistingLanguage",
             Self::AlreadyExistingLanguage(_) => "AlreadyExistingLanguage",

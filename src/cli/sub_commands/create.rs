@@ -24,12 +24,10 @@ pub fn create(i18n_path: &str, lang: &str) {
         Ok(mut translation) => {
             if let Err(err) = translation.add_language(lang) {
                 eprintln!("{}: {} 🚫", err.name().red(), err.msg());
+            } else if let Err(err) = translation.export() {
+                eprintln!("{}: {} 🚫", err.name().red(), err.msg());
             } else {
-                if let Err(err) = translation.export() {
-                    eprintln!("{}: {} 🚫", err.name().red(), err.msg());
-                } else {
-                    println!("Creating '{}' language successfully ✅", lang.green());
-                }
+                println!("Creating '{}' language successfully ✅", lang.green());
             }
         }
         Err(err) => eprintln!("{}: {} 🚫", err.name().red(), err.msg()),

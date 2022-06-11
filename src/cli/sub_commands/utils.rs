@@ -13,10 +13,9 @@ pub fn list_languages(i18n_dir: &str) -> I18nResult<Vec<I18nResult<I18nResult<St
                 .map(|e| {
                     e.file_name()
                         .to_str()
-                        .ok_or(I18nError::NonUtf8LanguageName(format!(
-                            "'{:?}' is non-ut8",
-                            e
-                        )))
+                        .ok_or_else(|| {
+                            I18nError::NonUtf8LanguageName(format!("'{:?}' is non-ut8", e))
+                        })
                         .map(|file_name: &str| file_name.replace(".json", ""))
                 })
                 .map_err(|err| I18nError::ReadLanguageFileError(err.to_string()))
@@ -55,7 +54,7 @@ impl Language {
             .map_err(|err| I18nError::ParseJsonError(format!("'{lang_name}', {err}")))?;
             Ok(Self {
                 lang_name: lang_name.into(),
-                lang_file: lang_file.into(),
+                lang_file,
                 translations,
             })
         } else {
