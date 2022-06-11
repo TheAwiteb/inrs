@@ -96,27 +96,20 @@ impl Translations {
         }
     }
 
-    /// Add new translation
-    pub fn add_translation(&mut self, translation: Translation) -> I18nResult<()> {
+    /// Add/Update translation
+    pub fn update_translation(&mut self, translation: &Translation) -> I18nResult<()> {
         // Check if language already exists
-        if let Some(lang) = self // &mut Language
+        if let Some(lang) = self
             .languages
             .iter_mut()
             .find(|lang| lang.lang_name == translation.lang_name)
         {
-            // Check if key not exists
-            if !lang.translations.contains_key(translation.key) {
-                lang.translations.insert(
-                    translation.key.to_string(),
-                    translation.translation.to_string(),
-                );
-                Ok(())
-            } else {
-                Err(I18nError::AlreadyExistingKey(format!(
-                    "'{}' is already exists",
-                    translation.key
-                )))
-            }
+            lang.translations.insert(
+                translation.key.to_string(),
+                translation.translation.to_string(),
+            );
+            self.fill_missing_keys();
+            Ok(())
         } else {
             Err(I18nError::NonExistingLanguage(format!(
                 "'{}' is not exists",
