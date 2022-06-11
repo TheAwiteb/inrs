@@ -16,13 +16,15 @@
 //     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 mod create;
+mod update;
 mod utils;
 
 pub mod errors;
 
+use super::validator::validate_lang_name;
 use clap::Subcommand;
 
-pub use create::create;
+pub use {create::create, update::update, utils::Translation};
 
 #[derive(Debug, Subcommand)]
 /// i18nrs sub commands
@@ -30,10 +32,21 @@ pub enum Subcommands {
     /// Create new language file 🔤
     Create {
         /// The language name 🔤
-        #[clap(short, long)]
+        #[clap(short, long, validator = validate_lang_name)]
         lang: String,
     },
-    // TODO: Update command
+    /// Add/Update translation 🆕
+    Update {
+        /// Language name to add/update in it 🆕
+        #[clap(short, long, validator = validate_lang_name)]
+        lang: String,
+        /// The translation key 🗝
+        #[clap(short, long)]
+        key: String,
+        /// The translation 🔤
+        #[clap(short, long)]
+        trans: String,
+    },
     // TODO: Delete command
     // TODO: Config command
 }
