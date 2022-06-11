@@ -26,8 +26,16 @@ Simple CLI to (add, delete, update, create) i18n translation file
 ## Requirements
  * [Rust](https://www.rust-lang.org/)
 
+## Features
+- Sort translations by key (in json file).
+- Add the missing keys with an empty translation (in json file).
+- Create new language with `create` command.
+
+## Disadvantages
+- Only support json files
+
 ## Install
->> Soon
+> Soon
 
 ## Using
 ```
