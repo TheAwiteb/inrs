@@ -1,6 +1,6 @@
 use super::errors::{I18nError, I18nResult};
 use serde_json;
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, HashSet};
 use std::fs::{read_dir, read_to_string, write};
 use std::path::{Path, PathBuf};
 
@@ -23,7 +23,7 @@ pub fn list_languages(i18n_dir: &str) -> I18nResult<Vec<I18nResult<I18nResult<St
         .collect())
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Eq, PartialEq)]
 pub struct Language {
     pub lang_name: String,
     pub lang_file: PathBuf,
@@ -72,28 +72,28 @@ impl Translations {
         for lang in list_languages(i18n_dir)? {
             languages.push(Language::new(i18n_dir, &lang??)?)
         }
-        let mut translations = Self {
+        Ok(Self {
             i18n_dir: i18n_dir.to_string(),
             languages,
-        };
-        translations.fill_missing_keys();
-        Ok(translations)
+        })
     }
 
     /// Fill the missing keys for each language
     fn fill_missing_keys(&mut self) {
-        let cloned_language = self.languages.clone();
-        for main_lang in self.languages.iter_mut() {
-            for lang in cloned_language.iter() {
-                for key in lang.translations.keys() {
-                    if !main_lang.translations.contains_key(key) {
-                        main_lang
-                            .translations
-                            .insert(key.to_string(), String::new());
-                    }
-                }
-            }
-        }
+        self.languages
+            .clone()
+            .iter()
+            .flat_map(|lang| lang.translations.keys())
+            .collect::<HashSet<&String>>()
+            .iter()
+            .for_each(|key| {
+                self.languages
+                    .iter_mut()
+                    .filter(|lang| !lang.translations.contains_key(*key))
+                    .for_each(|lang| {
+                        lang.translations.insert(key.to_string(), String::new());
+                    })
+            })
     }
 
     /// Add/Update translation
