@@ -1,3 +1,5 @@
+use colored::Colorize;
+
 #[derive(Debug)]
 pub enum I18nError {
     NonExistingLanguage(String),
@@ -34,6 +36,11 @@ impl I18nError {
             Self::ParseJsonError(_) => "ParseJsonError",
             Self::WriteOnFileError(_) => "WriteOnFileError",
         }
+    }
+
+    /// Print the error
+    pub fn print(&self) {
+        eprintln!("{}: {} 🚫", self.name().red(), self.msg());
     }
 }
 

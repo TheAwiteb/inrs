@@ -23,13 +23,13 @@ pub fn create(i18n_path: &str, lang: &str) {
     match Translations::new(i18n_path) {
         Ok(mut translation) => {
             if let Err(err) = translation.add_language(lang) {
-                eprintln!("{}: {} 🚫", err.name().red(), err.msg());
+                err.print();
             } else if let Err(err) = translation.export() {
-                eprintln!("{}: {} 🚫", err.name().red(), err.msg());
+                err.print();
             } else {
                 println!("Creating '{}' language successfully ✅", lang.green());
             }
         }
-        Err(err) => eprintln!("{}: {} 🚫", err.name().red(), err.msg()),
+        Err(err) => err.print(),
     }
 }
