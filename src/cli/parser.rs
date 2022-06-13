@@ -20,7 +20,7 @@ use super::validator::validate_i18n_path;
 use clap::Parser;
 
 #[derive(Parser, Debug)]
-#[clap(about, long_about = None)]
+#[clap(about, version, long_about = None)]
 /// Simple CLI to (add, delete, update, create) i18n translation file 🔤 🦀
 pub struct App {
     /// Path of i18n directory 📂

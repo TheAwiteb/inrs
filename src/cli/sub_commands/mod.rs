@@ -16,6 +16,7 @@
 //     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 mod create;
+mod delete;
 mod update;
 mod utils;
 
@@ -24,7 +25,7 @@ pub mod errors;
 use super::validator::validate_lang_name;
 use clap::Subcommand;
 
-pub use {create::create, update::update, utils::Translation};
+pub use {create::create, delete::delete, update::update, utils::Translation};
 
 #[derive(Debug, Subcommand)]
 /// i18nrs sub commands
@@ -47,6 +48,11 @@ pub enum Subcommands {
         #[clap(short, long)]
         trans: String,
     },
-    // TODO: Delete command
+    /// Delete translations by key 🚧
+    Delete {
+        /// The translation key 🗝
+        #[clap(short, long)]
+        key: String,
+    },
     // TODO: Config command
 }

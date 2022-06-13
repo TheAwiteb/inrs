@@ -108,7 +108,6 @@ impl Translations {
                 translation.key.to_string(),
                 translation.translation.to_string(),
             );
-            self.fill_missing_keys();
             Ok(())
         } else {
             Err(I18nError::NonExistingLanguage(format!(
@@ -116,6 +115,15 @@ impl Translations {
                 translation.lang_name
             )))
         }
+    }
+
+    /// Delete translation
+    pub fn delete_translation(&mut self, key: &str) -> I18nResult<()> {
+        // delete the key from the translations
+        self.languages.iter_mut().for_each(|lang| {
+            lang.translations.remove(key);
+        });
+        Ok(())
     }
 
     /// Add new language
@@ -129,7 +137,6 @@ impl Translations {
             } else {
                 let language = Language::new(&self.i18n_dir, lang_name)?;
                 self.languages.push(language);
-                self.fill_missing_keys();
                 Ok(self.languages.last().unwrap())
             }
         } else {
@@ -140,7 +147,8 @@ impl Translations {
     }
 
     /// Exports translations to files
-    pub fn export(&self) -> I18nResult<()> {
+    pub fn export(&mut self) -> I18nResult<()> {
+        self.fill_missing_keys();
         for lang in self.languages.iter() {
             write(
                 &lang.lang_file,
