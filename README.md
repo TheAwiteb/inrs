@@ -27,9 +27,12 @@ Simple CLI to (add, delete, update, create) i18n translation file
  * [Rust](https://www.rust-lang.org/)
 
 ## Features
+- Write in Rust 🦀.
 - Sort translations by key (in json file).
 - Add the missing keys with an empty translation (in json file).
 - Create new language with `create` command.
+- Add/Update translation on specified language with `update` command.
+- Delete translation by key in all languages with `delete` command.
 
 ## Disadvantages
 - Only support json files
@@ -45,11 +48,13 @@ USAGE:
 OPTIONS:
     -h, --help           Print help information
     -p, --path <PATH>    Path of i18n directory 📂
+    -V, --version        Print version information
 
 SUBCOMMANDS:
     create    Create new language file 🔤
+    delete    Delete translations by key 🚧
     help      Print this message or the help of the given subcommand(s)
-
+    update    Add/Update translation 🆕
 ```
 
 ## License
