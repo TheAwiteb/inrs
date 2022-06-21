@@ -1,6 +1,6 @@
 // Simple CLI to (add, delete, update, create) i18n translation file
 //     Copyright (C) 2020-2022  TheAwiteb
-//     https://github.com/TheAwiteb/i18nrs
+//     https://github.com/TheAwiteb/inrs
 //
 //     This program is free software: you can redistribute it and/or modify
 //     it under the terms of the GNU General Public License as published by
@@ -28,7 +28,7 @@ use clap::Subcommand;
 pub use {create::create, delete::delete, update::update, utils::Translation};
 
 #[derive(Debug, Subcommand)]
-/// i18nrs sub commands
+/// inrs sub commands
 pub enum Subcommands {
     /// Create new language file 🔤
     Create {

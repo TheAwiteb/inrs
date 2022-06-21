@@ -1,13 +1,13 @@
 <div align="center">
 
-# i18nrs
+# Inrs
 Simple CLI to (add, delete, update, create) i18n translation file
 
 </div>
 
 ```
     Copyright (C) 2020-2022  TheAwiteb
-    https://github.com/TheAwiteb/i18nrs
+    https://github.com/TheAwiteb/inrs
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -43,7 +43,7 @@ Simple CLI to (add, delete, update, create) i18n translation file
 ## Using
 ```
 USAGE:
-    i18nrs --path <PATH> <SUBCOMMAND>
+    inrs --path <PATH> <SUBCOMMAND>
 
 OPTIONS:
     -h, --help           Print help information
