@@ -1,6 +1,6 @@
 // Simple CLI to (add, delete, update, create) i18n translation file
 //     Copyright (C) 2020-2022  TheAwiteb
-//     https://github.com/TheAwiteb/i18nrs
+//     https://github.com/TheAwiteb/inrs
 //
 //     This program is free software: you can redistribute it and/or modify
 //     it under the terms of the GNU General Public License as published by
@@ -16,22 +16,43 @@
 //     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 mod create;
+mod delete;
+mod update;
+mod utils;
 
+pub mod errors;
+
+use super::validator::validate_lang_name;
 use clap::Subcommand;
 
-pub use create::create;
+pub use {create::create, delete::delete, update::update, utils::Translation};
 
 #[derive(Debug, Subcommand)]
-/// i18nrs sub commands
+/// inrs sub commands
 pub enum Subcommands {
-    /// Create new languge file 🔤
+    /// Create new language file 🔤
     Create {
-        /// The languge name 🔤
-        #[clap(short, long)]
+        /// The language name 🔤
+        #[clap(short, long, validator = validate_lang_name)]
         lang: String,
     },
-    // TODO: Add command
-    // TODO: Update command
-    // TODO: Delete command
+    /// Add/Update translation 🆕
+    Update {
+        /// Language name to add/update in it 🆕
+        #[clap(short, long, validator = validate_lang_name)]
+        lang: String,
+        /// The translation key 🗝
+        #[clap(short, long)]
+        key: String,
+        /// The translation 🔤
+        #[clap(short, long)]
+        trans: String,
+    },
+    /// Delete translations by key 🚧
+    Delete {
+        /// The translation key 🗝
+        #[clap(short, long)]
+        key: String,
+    },
     // TODO: Config command
 }

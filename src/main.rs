@@ -1,6 +1,6 @@
 // Simple CLI to (add, delete, update, create) i18n translation file
 //     Copyright (C) 2020-2022  TheAwiteb
-//     https://github.com/TheAwiteb/i18nrs
+//     https://github.com/TheAwiteb/inrs
 //
 //     This program is free software: you can redistribute it and/or modify
 //     it under the terms of the GNU General Public License as published by
@@ -17,11 +17,16 @@
 
 mod cli;
 
-use cli::sub_commands::{create, Subcommands};
+use cli::sub_commands::{create, delete, update, Subcommands};
 
 fn main() {
     let app = cli::parse();
     match app.action {
-        Subcommands::Create { lang } => create(&app.path, &lang),
+        Subcommands::Create { lang } => create(app.path.as_str(), lang.as_str()),
+        Subcommands::Update { lang, key, trans } => update(
+            app.path.as_str(),
+            (lang.as_str(), key.as_str(), trans.as_str()).into(),
+        ),
+        Subcommands::Delete { key } => delete(app.path.as_str(), key.as_str()),
     };
 }

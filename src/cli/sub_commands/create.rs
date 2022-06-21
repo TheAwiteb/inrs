@@ -1,6 +1,6 @@
 // Simple CLI to (add, delete, update, create) i18n translation file
 //     Copyright (C) 2020-2022  TheAwiteb
-//     https://github.com/TheAwiteb/i18nrs
+//     https://github.com/TheAwiteb/inrs
 //
 //     This program is free software: you can redistribute it and/or modify
 //     it under the terms of the GNU General Public License as published by
@@ -15,7 +15,21 @@
 //     You should have received a copy of the GNU General Public License
 //     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+use super::utils::Translations;
+use colored::Colorize;
+
 /// Create new translation file in i18n directory
-pub fn create(_i18n_dir: &str, _lang: &str) {
-    todo!("Create Command")
+pub fn create(i18n_path: &str, lang: &str) {
+    match Translations::new(i18n_path) {
+        Ok(mut translation) => {
+            if let Err(err) = translation.add_language(lang) {
+                err.print();
+            } else if let Err(err) = translation.export() {
+                err.print();
+            } else {
+                println!("Creating '{}' language successfully ✅", lang.green());
+            }
+        }
+        Err(err) => err.print(),
+    }
 }

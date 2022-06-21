@@ -1,6 +1,6 @@
 // Simple CLI to (add, delete, update, create) i18n translation file
 //     Copyright (C) 2020-2022  TheAwiteb
-//     https://github.com/TheAwiteb/i18nrs
+//     https://github.com/TheAwiteb/inrs
 //
 //     This program is free software: you can redistribute it and/or modify
 //     it under the terms of the GNU General Public License as published by
@@ -20,11 +20,12 @@ use super::validator::validate_i18n_path;
 use clap::Parser;
 
 #[derive(Parser, Debug)]
-#[clap(about, long_about = None)]
+#[clap(about, version, long_about = None)]
 /// Simple CLI to (add, delete, update, create) i18n translation file 🔤 🦀
 pub struct App {
     /// Path of i18n directory 📂
     #[clap(short, long, validator = validate_i18n_path)]
+    // FEATURE/TODO: Make path optional and search in current directory or config file
     pub path: String,
     #[clap(subcommand)]
     pub action: Subcommands,
