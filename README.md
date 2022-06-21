@@ -38,7 +38,25 @@ Simple CLI to (add, delete, update, create) i18n translation file
 - Only support json files
 
 ## Install
-> Soon
+### With Cargo
+```bash
+cargo install inrs
+inrs --version
+```
+### From source
+```bash
+# Clone the repo
+git clone https://github.com/theawiteb/inrs.git
+# Change directory to it
+cd inrs
+# Build it with cargo
+cargo build --release
+# Move the binary to `/usr/bin` (Unix like system) (need permission to move in `/usr/bin`)
+# You can change binary directory to `~/.cargo/bin` if its exists and its in `$PATH`
+sudo mv ./target/release/inrs /usr/bin/inrs
+# Print the version
+inrs --version
+```
 
 ## Using
 ```
@@ -56,6 +74,14 @@ SUBCOMMANDS:
     help      Print this message or the help of the given subcommand(s)
     update    Add/Update translation 🆕
 ```
+
+## Images
+
+|Left|Right|
+|:-:|:-:|
+|![](https://i.suar.me/yWA4n/l)|![](https://i.suar.me/AW1le/l)|
+|![](https://i.suar.me/Kgroy/l)|![](https://i.suar.me/mw0BN/l)|
+
 
 ## License
 GNU General Public License version 3 of the license for more see <https://www.gnu.org/licenses/>
