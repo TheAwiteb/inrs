@@ -11,6 +11,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
 
       - name: Build Changelog 🏗
         id: changelog
@@ -28,3 +32,8 @@ jobs:
           body: ${{steps.changelog.outputs.changelog}}
         env:
           GITHUB_TOKEN: ${{ secrets.PAT }}
+
+      - name: Publish to crates.io 🚀
+        uses: katyo/publish-crates@v1
+        with:
+          registry-token: ${{ secrets.PAT }}
