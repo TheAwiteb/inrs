@@ -29,6 +29,7 @@ jobs:
         with:
           tag_name: ${{ github.ref }}
           release_name: ${{ github.ref }}
+          prerelease: ${{ contains(github.ref, 'rc') || contains(github.ref, 'pre') }}
           body: ${{steps.changelog.outputs.changelog}}
         env:
           GITHUB_TOKEN: ${{ secrets.PAT }}
