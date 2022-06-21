@@ -36,4 +36,4 @@ jobs:
       - name: Publish to crates.io 🚀
         uses: katyo/publish-crates@v1
         with:
-          registry-token: ${{ secrets.PAT }}
+          registry-token: ${{ secrets.CARGO_REGISTRY_TOKEN }}
