@@ -2,10 +2,14 @@
 name = "inrs"
 version = "0.1.0-pre.0"
 edition = "2021"
+license = "GPL-3-only"
 authors = ["Awiteb <https://github.com/TheAwiteb>"]
+readme = "README.md"
 description = "Simple CLI to (add, delete, update, create) i18n translation file 🔤 🦀"
 repository = "https://github.com/TheAwiteb/inrs"
 rust-version = "1.61"
+keywords = ["translation", "i18n", "CLI"]
+categories = ["command-line-utilities"]
 
 [dependencies]
 clap = { version = "= 3.1.18", features = ["derive"] }
