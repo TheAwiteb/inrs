@@ -1,6 +1,6 @@
 // Simple CLI to (add, delete, update, create) i18n translation file
 //     Copyright (C) 2020-2022  TheAwiteb
-//     https://github.com/TheAwiteb/i18nrs
+//     https://github.com/TheAwiteb/inrs
 //
 //     This program is free software: you can redistribute it and/or modify
 //     it under the terms of the GNU General Public License as published by

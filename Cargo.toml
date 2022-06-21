@@ -1,16 +1,16 @@
 [package]
-name = "i18nrs"
+name = "inrs"
 version = "0.0.0"
 edition = "2021"
 authors = ["Awiteb <https://github.com/TheAwiteb>"]
 description = "Simple CLI to (add, delete, update, create) i18n translation file 🔤 🦀"
-repository = "https://github.com/TheAwiteb/i18nrs"
+repository = "https://github.com/TheAwiteb/inrs"
 rust-version = "1.61"
 
 [dependencies]
 clap = { version = "= 3.1.18", features = ["derive"] }
 colored = "2.0.0"
-comfy-table = "6.0.0"
+# comfy-table = "6.0.0"
 serde_json = "1.0.81"
 
 [profile.release]
