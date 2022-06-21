@@ -1,6 +1,6 @@
 [package]
 name = "inrs"
-version = "0.0.0"
+version = "0.1.0-pre.0"
 edition = "2021"
 authors = ["Awiteb <https://github.com/TheAwiteb>"]
 description = "Simple CLI to (add, delete, update, create) i18n translation file 🔤 🦀"
