@@ -136,7 +136,7 @@ impl Translations {
 
     /// Delete translation
     pub fn delete_translation(&mut self, key: &str) -> I18nResult<()> {
-        if self.languages.len() > 0 {
+        if !self.languages.is_empty() {
             if self
                 .languages
                 .iter()
