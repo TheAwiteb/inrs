@@ -61,11 +61,11 @@ inrs --version
 ## Using
 ```
 USAGE:
-    inrs --path <PATH> <SUBCOMMAND>
+    inrs [OPTIONS] <SUBCOMMAND>
 
 OPTIONS:
     -h, --help           Print help information
-    -p, --path <PATH>    Path of i18n directory 📂
+    -p, --path <PATH>    Path of i18n directory 📂 [default: i18n]
     -V, --version        Print version information
 
 SUBCOMMANDS:
