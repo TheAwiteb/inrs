@@ -24,8 +24,7 @@ use clap::Parser;
 /// Simple CLI to (add, delete, update, create) i18n translation file 🔤 🦀
 pub struct App {
     /// Path of i18n directory 📂
-    #[clap(short, long, validator = validate_i18n_path)]
-    // FEATURE/TODO: Make path optional and search in current directory or config file
+    #[clap(short, long, validator = validate_i18n_path, default_value = "i18n")]
     pub path: String,
     #[clap(subcommand)]
     pub action: Subcommands,
