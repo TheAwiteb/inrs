@@ -136,11 +136,28 @@ impl Translations {
 
     /// Delete translation
     pub fn delete_translation(&mut self, key: &str) -> I18nResult<()> {
-        // delete the key from the translations
-        self.languages.iter_mut().for_each(|lang| {
-            lang.translations.remove(key);
-        });
-        Ok(())
+        if !self.languages.is_empty() {
+            if self
+                .languages
+                .iter()
+                .any(|lang| lang.translations.contains_key(key))
+            {
+                // delete the key from the translations
+                self.languages.iter_mut().for_each(|lang| {
+                    lang.translations.remove(key);
+                });
+                Ok(())
+            } else {
+                Err(I18nError::NonExistingKey(format!(
+                    "There is no key named '{key}' in the translations"
+                )))
+            }
+        } else {
+            Err(I18nError::ThereIsNoLanguages(format!(
+                "There is no languages in {}",
+                self.i18n_dir
+            )))
+        }
     }
 
     /// Add new language
