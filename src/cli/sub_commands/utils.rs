@@ -24,7 +24,7 @@ use std::path::{Path, PathBuf};
 /// Returns all languages in i18n directory
 pub fn list_languages(i18n_dir: &str) -> I18nResult<Vec<I18nResult<I18nResult<String>>>> {
     Ok(read_dir(i18n_dir)
-        .map_err(|err| I18nError::ReadI18nDirectoryError(err.to_string()))?
+        .map_err(|err| I18nError::ReadI18nDirectoryError(format!("'{i18n_dir}', {err}")))?
         .map(|entry| {
             entry
                 .map(|e| {
@@ -64,11 +64,11 @@ impl Language {
     pub fn new(i18n_dir: &str, lang_name: &str) -> I18nResult<Self> {
         let lang_file = Path::new(i18n_dir).join(lang_name).with_extension("json");
         if lang_file.exists() {
-            let translations: BTreeMap<String, String> = serde_json::from_str(
-                &read_to_string(&lang_file)
-                    .map_err(|err| I18nError::ReadLanguageFileError(err.to_string()))?,
-            )
-            .map_err(|err| I18nError::ParseJsonError(format!("'{lang_name}', {err}")))?;
+            let translations: BTreeMap<String, String> =
+                serde_json::from_str(&read_to_string(&lang_file).map_err(|err| {
+                    I18nError::ReadLanguageFileError(format!("'{lang_name}', {err}"))
+                })?)
+                .map_err(|err| I18nError::ParseJsonError(format!("'{lang_name}', {err}")))?;
             Ok(Self {
                 lang_name: lang_name.into(),
                 lang_file,
@@ -150,7 +150,7 @@ impl Translations {
             .with_extension("json");
         if !lang_file.exists() {
             if let Err(err) = write(lang_file, "{}") {
-                Err(I18nError::WriteOnFileError(err.to_string()))
+                Err(I18nError::WriteOnFileError(format!("'{lang_name}', {err}")))
             } else {
                 let language = Language::new(&self.i18n_dir, lang_name)?;
                 self.languages.push(language);
