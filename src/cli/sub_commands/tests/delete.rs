@@ -17,7 +17,7 @@
 
 use super::utils::{create_i18n, delete_i18n, list_i18n, list_translations, to_json_list};
 use crate::cli::sub_commands::utils::Translation;
-use crate::cli::sub_commands::{create, delete, update};
+use crate::cli::sub_commands::{create, delete_key, update};
 use std::io::Result as IOResult;
 
 #[test]
@@ -35,7 +35,7 @@ fn test_delete_key() -> IOResult<()> {
         },
     );
     assert!(list_translations(i18n_path, "en_US").contains_key("name"));
-    delete(i18n_path, "name");
+    delete_key(i18n_path, "name");
     assert!(!list_translations(i18n_path, "en_US").contains_key("name"));
     delete_i18n(i18n_path)?;
     Ok(())
