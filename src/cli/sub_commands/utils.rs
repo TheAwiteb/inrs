@@ -18,7 +18,7 @@
 use super::errors::{I18nError, I18nResult};
 use serde_json;
 use std::collections::{BTreeMap, HashSet};
-use std::fs::{read_dir, read_to_string, write};
+use std::fs::{self, read_dir, read_to_string, write};
 use std::path::{Path, PathBuf};
 
 /// Returns all languages in i18n directory
@@ -154,7 +154,36 @@ impl Translations {
             }
         } else {
             Err(I18nError::ThereIsNoLanguages(format!(
-                "There is no languages in {}",
+                "There is no languages in '{}'",
+                self.i18n_dir
+            )))
+        }
+    }
+
+    /// Delete language
+    pub fn delete_language(&mut self, lang_name: &str) -> I18nResult<()> {
+        if !self.languages.is_empty() {
+            if let Some((idx, _lang)) = self
+                .languages
+                .iter()
+                .enumerate()
+                .find(|(_idx, lang)| lang.lang_name == lang_name)
+            {
+                self.languages.remove(idx);
+                fs::remove_file(
+                    Path::new(self.i18n_dir.as_str())
+                        .join(lang_name)
+                        .with_extension("json"),
+                )
+                .map_err(|err| I18nError::DeleteFileError(err.to_string()))
+            } else {
+                Err(I18nError::NonExistingLanguage(format!(
+                    "There is no language named '{lang_name}'",
+                )))
+            }
+        } else {
+            Err(I18nError::ThereIsNoLanguages(format!(
+                "There is no languages in '{}'",
                 self.i18n_dir
             )))
         }

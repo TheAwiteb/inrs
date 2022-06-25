@@ -27,10 +27,30 @@ pub mod errors;
 use super::validator::validate_lang_name;
 use clap::Subcommand;
 
-pub use {create::create, delete::delete, update::update, utils::Translation};
+pub use {
+    create::create,
+    delete::{delete_key, delete_language},
+    update::update,
+    utils::Translation,
+};
+
+/// Delete sub commands
+#[derive(Debug, Subcommand)]
+pub enum DeleteSubCommands {
+    /// Delete language from i18n directory 🗑️
+    Lang {
+        #[clap(short, long, validator = validate_lang_name)]
+        lang: String,
+    },
+    /// Delete translation from languages 🗑️
+    Trans {
+        #[clap(short, long)]
+        key: String,
+    },
+}
 
 #[derive(Debug, Subcommand)]
-/// inrs sub commands
+/// Inrs sub commands
 pub enum Subcommands {
     /// Create new language file 🔤
     Create {
@@ -50,11 +70,10 @@ pub enum Subcommands {
         #[clap(short, long)]
         trans: String,
     },
-    /// Delete translations by key 🚧
+    /// Delete translation/language 🚧
     Delete {
-        /// The translation key 🗝
-        #[clap(short, long)]
-        key: String,
+        #[clap(subcommand)]
+        action: DeleteSubCommands,
     },
     // TODO: Config command
 }
