@@ -24,7 +24,7 @@ use std::path::{Path, PathBuf};
 /// Returns all languages in i18n directory
 pub fn list_languages(i18n_dir: &str) -> I18nResult<Vec<I18nResult<I18nResult<String>>>> {
     Ok(read_dir(i18n_dir)
-        .map_err(|err| I18nError::ReadI18nDirectoryError(format!("'{i18n_dir}', {err}")))?
+        .map_err(|err| I18nError::ReadI18nDirectory(format!("'{i18n_dir}', {err}")))?
         .map(|entry| {
             entry
                 .map(|e| {
@@ -35,7 +35,7 @@ pub fn list_languages(i18n_dir: &str) -> I18nResult<Vec<I18nResult<I18nResult<St
                         })
                         .map(|file_name: &str| file_name.replace(".json", ""))
                 })
-                .map_err(|err| I18nError::ReadLanguageFileError(err.to_string()))
+                .map_err(|err| I18nError::ReadLanguageFile(err.to_string()))
         })
         .collect())
 }
@@ -64,11 +64,11 @@ impl Language {
     pub fn new(i18n_dir: &str, lang_name: &str) -> I18nResult<Self> {
         let lang_file = Path::new(i18n_dir).join(lang_name).with_extension("json");
         if lang_file.exists() {
-            let translations: BTreeMap<String, String> =
-                serde_json::from_str(&read_to_string(&lang_file).map_err(|err| {
-                    I18nError::ReadLanguageFileError(format!("'{lang_name}', {err}"))
-                })?)
-                .map_err(|err| I18nError::ParseJsonError(format!("'{lang_name}', {err}")))?;
+            let translations: BTreeMap<String, String> = serde_json::from_str(
+                &read_to_string(&lang_file)
+                    .map_err(|err| I18nError::ReadLanguageFile(format!("'{lang_name}', {err}")))?,
+            )
+            .map_err(|err| I18nError::ParseJson(format!("'{lang_name}', {err}")))?;
             Ok(Self {
                 lang_name: lang_name.into(),
                 lang_file,
@@ -175,7 +175,7 @@ impl Translations {
                         .join(lang_name)
                         .with_extension("json"),
                 )
-                .map_err(|err| I18nError::DeleteFileError(err.to_string()))
+                .map_err(|err| I18nError::DeleteFile(err.to_string()))
             } else {
                 Err(I18nError::NonExistingLanguage(format!(
                     "There is no language named '{lang_name}'",
@@ -196,7 +196,7 @@ impl Translations {
             .with_extension("json");
         if !lang_file.exists() {
             if let Err(err) = write(lang_file, "{}") {
-                Err(I18nError::WriteOnFileError(format!("'{lang_name}', {err}")))
+                Err(I18nError::WriteOnFile(format!("'{lang_name}', {err}")))
             } else {
                 let language = Language::new(&self.i18n_dir, lang_name)?;
                 self.languages.push(language);
@@ -216,10 +216,10 @@ impl Translations {
             write(
                 &lang.lang_file,
                 serde_json::to_string_pretty(&lang.translations).map_err(|err| {
-                    I18nError::ParseJsonError(format!("'{}', {}", lang.lang_name, err))
+                    I18nError::ParseJson(format!("'{}', {}", lang.lang_name, err))
                 })?,
             )
-            .map_err(|err| I18nError::WriteOnFileError(format!("'{}', {}", lang.lang_name, err)))?;
+            .map_err(|err| I18nError::WriteOnFile(format!("'{}', {}", lang.lang_name, err)))?;
         }
         Ok(())
     }
