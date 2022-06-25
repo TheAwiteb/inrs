@@ -17,7 +17,7 @@
 
 use super::utils::{create_i18n, delete_i18n, list_i18n, list_translations, to_json_list};
 use crate::cli::sub_commands::utils::Translation;
-use crate::cli::sub_commands::{create, delete_key, update};
+use crate::cli::sub_commands::{create, delete_key, delete_language, update};
 use std::io::Result as IOResult;
 
 #[test]
@@ -37,6 +37,18 @@ fn test_delete_key() -> IOResult<()> {
     assert!(list_translations(i18n_path, "en_US").contains_key("name"));
     delete_key(i18n_path, "name");
     assert!(!list_translations(i18n_path, "en_US").contains_key("name"));
+    delete_i18n(i18n_path)?;
+    Ok(())
+}
+
+#[test]
+fn test_delete_language() -> IOResult<()> {
+    let i18n_path = "i18n-dl";
+    create_i18n(i18n_path)?;
+    create(i18n_path, "en_US");
+    assert_eq!(list_i18n(i18n_path)?, to_json_list(vec!["en_US"]));
+    delete_language(i18n_path, "en_US");
+    assert!(list_i18n(i18n_path)?.is_empty());
     delete_i18n(i18n_path)?;
     Ok(())
 }
