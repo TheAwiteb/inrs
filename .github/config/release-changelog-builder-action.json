@@ -24,6 +24,12 @@
       "labels": [
         "📝 documentation"
       ]
+    },
+    {
+      "title": "## 💡 Improvements",
+      "labels": [
+        "💡 improvements"
+      ]
     }
   ],
   "sort": "ASC",
