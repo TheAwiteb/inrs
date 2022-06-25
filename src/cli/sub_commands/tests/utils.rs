@@ -20,7 +20,7 @@ use std::collections::BTreeMap;
 use std::fs::{create_dir, read_dir, remove_dir_all};
 use std::io::Result as IOResult;
 
-pub fn to_json_list<'a>(names: Vec<&'a str>) -> Vec<String> {
+pub fn to_json_list(names: Vec<&str>) -> Vec<String> {
     let mut names: Vec<String> = names
         .iter()
         .map(|name| name.to_string() + ".json")
@@ -39,7 +39,7 @@ pub fn delete_i18n(i18n_path: &str) -> IOResult<()> {
 
 pub fn list_i18n(i18n_path: &str) -> IOResult<Vec<String>> {
     let mut entrys = Vec::new();
-    for entry in read_dir(i18n_path)?.into_iter() {
+    for entry in read_dir(i18n_path)? {
         entrys.push(
             entry?
                 .file_name()
