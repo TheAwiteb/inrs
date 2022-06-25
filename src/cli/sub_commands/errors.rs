@@ -28,6 +28,7 @@ pub enum I18nError {
     ParseJsonError(String),
     WriteOnFileError(String),
     ThereIsNoLanguages(String),
+    DeleteFileError(String),
 }
 
 impl I18nError {
@@ -43,6 +44,7 @@ impl I18nError {
             Self::ParseJsonError(s) => s,
             Self::WriteOnFileError(s) => s,
             Self::ThereIsNoLanguages(s) => s,
+            Self::DeleteFileError(s) => s,
         }
     }
 
@@ -58,6 +60,7 @@ impl I18nError {
             Self::ParseJsonError(_) => "ParseJsonError",
             Self::WriteOnFileError(_) => "WriteOnFileError",
             Self::ThereIsNoLanguages(_) => "ThereIsNoLanguages",
+            Self::DeleteFileError(_) => "DeleteFileError",
         }
     }
 
