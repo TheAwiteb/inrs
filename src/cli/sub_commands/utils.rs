@@ -1,13 +1,30 @@
+// Simple CLI to (add, delete, update, create) i18n translation file
+//     Copyright (C) 2020-2022  TheAwiteb
+//     https://github.com/TheAwiteb/inrs
+//
+//     This program is free software: you can redistribute it and/or modify
+//     it under the terms of the GNU General Public License as published by
+//     the Free Software Foundation, either version 3 of the License, or
+//     (at your option) any later version.
+//
+//     This program is distributed in the hope that it will be useful,
+//     but WITHOUT ANY WARRANTY; without even the implied warranty of
+//     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//     GNU General Public License for more details.
+//
+//     You should have received a copy of the GNU General Public License
+//     along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 use super::errors::{I18nError, I18nResult};
 use serde_json;
 use std::collections::{BTreeMap, HashSet};
-use std::fs::{read_dir, read_to_string, write};
+use std::fs::{self, read_dir, read_to_string, write};
 use std::path::{Path, PathBuf};
 
 /// Returns all languages in i18n directory
 pub fn list_languages(i18n_dir: &str) -> I18nResult<Vec<I18nResult<I18nResult<String>>>> {
     Ok(read_dir(i18n_dir)
-        .map_err(|err| I18nError::ReadI18nDirectoryError(err.to_string()))?
+        .map_err(|err| I18nError::ReadI18nDirectory(format!("'{i18n_dir}', {err}")))?
         .map(|entry| {
             entry
                 .map(|e| {
@@ -18,7 +35,7 @@ pub fn list_languages(i18n_dir: &str) -> I18nResult<Vec<I18nResult<I18nResult<St
                         })
                         .map(|file_name: &str| file_name.replace(".json", ""))
                 })
-                .map_err(|err| I18nError::ReadLanguageFileError(err.to_string()))
+                .map_err(|err| I18nError::ReadLanguageFile(err.to_string()))
         })
         .collect())
 }
@@ -49,9 +66,9 @@ impl Language {
         if lang_file.exists() {
             let translations: BTreeMap<String, String> = serde_json::from_str(
                 &read_to_string(&lang_file)
-                    .map_err(|err| I18nError::ReadLanguageFileError(err.to_string()))?,
+                    .map_err(|err| I18nError::ReadLanguageFile(format!("'{lang_name}', {err}")))?,
             )
-            .map_err(|err| I18nError::ParseJsonError(format!("'{lang_name}', {err}")))?;
+            .map_err(|err| I18nError::ParseJson(format!("'{lang_name}', {err}")))?;
             Ok(Self {
                 lang_name: lang_name.into(),
                 lang_file,
@@ -119,11 +136,57 @@ impl Translations {
 
     /// Delete translation
     pub fn delete_translation(&mut self, key: &str) -> I18nResult<()> {
-        // delete the key from the translations
-        self.languages.iter_mut().for_each(|lang| {
-            lang.translations.remove(key);
-        });
-        Ok(())
+        if !self.languages.is_empty() {
+            if self
+                .languages
+                .iter()
+                .any(|lang| lang.translations.contains_key(key))
+            {
+                // delete the key from the translations
+                self.languages.iter_mut().for_each(|lang| {
+                    lang.translations.remove(key);
+                });
+                Ok(())
+            } else {
+                Err(I18nError::NonExistingKey(format!(
+                    "There is no key named '{key}' in the translations"
+                )))
+            }
+        } else {
+            Err(I18nError::ThereIsNoLanguages(format!(
+                "There is no languages in '{}'",
+                self.i18n_dir
+            )))
+        }
+    }
+
+    /// Delete language
+    pub fn delete_language(&mut self, lang_name: &str) -> I18nResult<()> {
+        if !self.languages.is_empty() {
+            if let Some((idx, _lang)) = self
+                .languages
+                .iter()
+                .enumerate()
+                .find(|(_idx, lang)| lang.lang_name == lang_name)
+            {
+                self.languages.remove(idx);
+                fs::remove_file(
+                    Path::new(self.i18n_dir.as_str())
+                        .join(lang_name)
+                        .with_extension("json"),
+                )
+                .map_err(|err| I18nError::DeleteFile(err.to_string()))
+            } else {
+                Err(I18nError::NonExistingLanguage(format!(
+                    "There is no language named '{lang_name}'",
+                )))
+            }
+        } else {
+            Err(I18nError::ThereIsNoLanguages(format!(
+                "There is no languages in '{}'",
+                self.i18n_dir
+            )))
+        }
     }
 
     /// Add new language
@@ -133,7 +196,7 @@ impl Translations {
             .with_extension("json");
         if !lang_file.exists() {
             if let Err(err) = write(lang_file, "{}") {
-                Err(I18nError::WriteOnFileError(err.to_string()))
+                Err(I18nError::WriteOnFile(format!("'{lang_name}', {err}")))
             } else {
                 let language = Language::new(&self.i18n_dir, lang_name)?;
                 self.languages.push(language);
@@ -153,10 +216,10 @@ impl Translations {
             write(
                 &lang.lang_file,
                 serde_json::to_string_pretty(&lang.translations).map_err(|err| {
-                    I18nError::ParseJsonError(format!("'{}', {}", lang.lang_name, err))
+                    I18nError::ParseJson(format!("'{}', {}", lang.lang_name, err))
                 })?,
             )
-            .map_err(|err| I18nError::WriteOnFileError(format!("'{}', {}", lang.lang_name, err)))?;
+            .map_err(|err| I18nError::WriteOnFile(format!("'{}', {}", lang.lang_name, err)))?;
         }
         Ok(())
     }

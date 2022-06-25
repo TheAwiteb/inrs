@@ -1,0 +1,9 @@
+blank_issues_enabled: true
+contact_links:
+- name: Question
+  url: 'https://github.com/TheAwiteb/inrs/discussions/new?category=question'
+  about: Ask a question about Inrs in the discussions section
+
+- name: Feature Request
+  url: 'https://github.com/TheAwiteb/inrs/discussions/new?category=feature-request'
+  about: If you think that Inrs needs a new feature, you can tell us about it in the discussions section

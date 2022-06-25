@@ -15,23 +15,7 @@
 //     You should have received a copy of the GNU General Public License
 //     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-mod cli;
-
-use cli::sub_commands::{
-    create, delete_key, delete_language, update, DeleteSubCommands, Subcommands,
-};
-
-fn main() {
-    let app = cli::parse();
-    match app.action {
-        Subcommands::Create { lang } => create(app.path.as_str(), lang.as_str()),
-        Subcommands::Update { lang, key, trans } => update(
-            app.path.as_str(),
-            (lang.as_str(), key.as_str(), trans.as_str()).into(),
-        ),
-        Subcommands::Delete { action } => match action {
-            DeleteSubCommands::Lang { lang } => delete_language(app.path.as_str(), lang.as_str()),
-            DeleteSubCommands::Trans { key } => delete_key(app.path.as_str(), key.as_str()),
-        },
-    };
-}
+mod create;
+mod delete;
+mod update;
+mod utils;
