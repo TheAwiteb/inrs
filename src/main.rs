@@ -17,7 +17,9 @@
 
 mod cli;
 
-use cli::sub_commands::{create, delete, update, Subcommands};
+use cli::sub_commands::{
+    create, delete_key, delete_language, update, DeleteSubCommands, Subcommands,
+};
 
 fn main() {
     let app = cli::parse();
@@ -27,6 +29,9 @@ fn main() {
             app.path.as_str(),
             (lang.as_str(), key.as_str(), trans.as_str()).into(),
         ),
-        Subcommands::Delete { key } => delete(app.path.as_str(), key.as_str()),
+        Subcommands::Delete { action } => match action {
+            DeleteSubCommands::Lang { lang } => delete_language(app.path.as_str(), lang.as_str()),
+            DeleteSubCommands::Trans { key } => delete_key(app.path.as_str(), key.as_str()),
+        },
     };
 }
