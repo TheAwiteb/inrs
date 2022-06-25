@@ -17,6 +17,8 @@
 
 mod create;
 mod delete;
+#[cfg(test)]
+pub mod tests;
 mod update;
 mod utils;
 
