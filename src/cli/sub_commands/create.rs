@@ -15,21 +15,28 @@
 //     You should have received a copy of the GNU General Public License
 //     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+use super::errors::I18nError;
 use super::utils::Translations;
 use colored::Colorize;
 
 /// Create new translation file in i18n directory
-pub fn create(i18n_path: &str, lang: &str) {
+pub fn create(i18n_path: &str, lang: &str) -> Option<I18nError> {
     match Translations::new(i18n_path) {
         Ok(mut translation) => {
             if let Err(err) = translation.add_language(lang) {
                 err.print();
+                Some(err)
             } else if let Err(err) = translation.export() {
                 err.print();
+                Some(err)
             } else {
                 println!("Creating '{}' language successfully ✅", lang.green());
+                None
             }
         }
-        Err(err) => err.print(),
+        Err(err) => {
+            err.print();
+            Some(err)
+        }
     }
 }
