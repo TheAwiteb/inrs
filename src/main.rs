@@ -17,21 +17,30 @@
 
 mod cli;
 
+use cli::sub_commands::errors::I18nError;
 use cli::sub_commands::{
     create, delete_key, delete_language, update, DeleteSubCommands, Subcommands,
 };
+use std::process::exit;
 
-fn main() {
+fn main() -> I18nError {
     let app = cli::parse();
     match app.action {
-        Subcommands::Create { lang } => create(app.path.as_str(), lang.as_str()),
+        Subcommands::Create { lang } => {
+            create(app.path.as_str(), lang.as_str()).unwrap_or_else(|| exit(0))
+        }
         Subcommands::Update { lang, key, trans } => update(
             app.path.as_str(),
             (lang.as_str(), key.as_str(), trans.as_str()).into(),
-        ),
+        )
+        .unwrap_or_else(|| exit(0)),
         Subcommands::Delete { action } => match action {
-            DeleteSubCommands::Lang { lang } => delete_language(app.path.as_str(), lang.as_str()),
-            DeleteSubCommands::Trans { key } => delete_key(app.path.as_str(), key.as_str()),
+            DeleteSubCommands::Lang { lang } => {
+                delete_language(app.path.as_str(), lang.as_str()).unwrap_or_else(|| exit(0))
+            }
+            DeleteSubCommands::Trans { key } => {
+                delete_key(app.path.as_str(), key.as_str()).unwrap_or_else(|| exit(0))
+            }
         },
-    };
+    }
 }
