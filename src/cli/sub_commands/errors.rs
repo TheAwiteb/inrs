@@ -16,6 +16,13 @@
 //     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 use colored::Colorize;
+use exitcode;
+use std::process::{ExitCode, Termination};
+
+/// [`i32`] to [`ExitCode`]
+fn to_exit_code(exitcode: i32) -> ExitCode {
+    (exitcode as u8).into()
+}
 
 #[derive(Debug)]
 pub enum I18nError {
@@ -67,6 +74,26 @@ impl I18nError {
     /// Print the error
     pub fn print(&self) {
         eprintln!("{}: {} 🚫", self.name().red(), self.msg());
+    }
+}
+
+impl Termination for I18nError {
+    fn report(self) -> ExitCode {
+        match self {
+            Self::DeleteFile(_) => to_exit_code(exitcode::NOPERM),
+            Self::ReadLanguageFile(_) => to_exit_code(exitcode::NOPERM),
+            Self::ReadI18nDirectory(_) => to_exit_code(exitcode::NOPERM),
+            Self::WriteOnFile(_) => to_exit_code(exitcode::NOPERM),
+            Self::AlreadyExistingLanguage(_) => to_exit_code(exitcode::CANTCREAT),
+            _ => {
+                // NonExistingLanguage
+                // NonExistingKey
+                // ThereIsNoLanguages
+                // NonUtf8LanguageName
+                // ParseJson
+                ExitCode::from(1)
+            }
+        }
     }
 }
 
