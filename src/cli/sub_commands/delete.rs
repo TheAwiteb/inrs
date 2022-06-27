@@ -15,37 +15,50 @@
 //     You should have received a copy of the GNU General Public License
 //     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+use super::errors::I18nError;
 use super::utils::Translations;
 use colored::Colorize;
 
 /// Delete the translations
-pub fn delete_key(i18n_dir: &str, key: &str) {
+pub fn delete_key(i18n_dir: &str, key: &str) -> Option<I18nError> {
     match Translations::new(i18n_dir) {
         Ok(mut translations) => {
             if let Err(err) = translations.delete_translation(key) {
                 err.print();
+                Some(err)
             } else if let Err(err) = translations.export() {
                 err.print();
+                Some(err)
             } else {
                 println!("'{}' deleted successfully from languages ✅", key.green(),);
+                None
             }
         }
-        Err(err) => err.print(),
+        Err(err) => {
+            err.print();
+            Some(err)
+        }
     }
 }
 
 /// Delete the language
-pub fn delete_language(i18n_dir: &str, lang_name: &str) {
+pub fn delete_language(i18n_dir: &str, lang_name: &str) -> Option<I18nError> {
     match Translations::new(i18n_dir) {
         Ok(mut translations) => {
             if let Err(err) = translations.delete_language(lang_name) {
                 err.print();
+                Some(err)
             } else if let Err(err) = translations.export() {
                 err.print();
+                Some(err)
             } else {
                 println!("'{}' deleted successfully ✅", lang_name.green(),);
+                None
             }
         }
-        Err(err) => err.print(),
+        Err(err) => {
+            err.print();
+            Some(err)
+        }
     }
 }
