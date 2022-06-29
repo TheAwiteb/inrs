@@ -16,10 +16,12 @@
 //     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 use super::errors::{I18nError, I18nResult};
+use comfy_table::{Cell, CellAlignment, Color, ContentArrangement, Row, Table};
 use serde_json;
 use std::collections::{BTreeMap, HashSet};
 use std::fs::{self, read_dir, read_to_string, write};
 use std::path::{Path, PathBuf};
+use std::string::ToString;
 
 /// Returns all languages in i18n directory
 pub fn list_languages(i18n_dir: &str) -> I18nResult<Vec<I18nResult<I18nResult<String>>>> {
@@ -80,6 +82,37 @@ impl Language {
             )))
         }
     }
+
+    /// Make table from language translations
+    fn to_table(&self, width: u16) -> String {
+        let mut idx: u8 = 0;
+        let mut counter: u8 = 0;
+        let colors: [Color; 3] = [Color::DarkYellow, Color::DarkCyan, Color::DarkBlue];
+        let mut table = Table::new();
+        table
+            .set_header([
+                Cell::new("Key").set_alignment(CellAlignment::Center),
+                Cell::new("Translation").set_alignment(CellAlignment::Center),
+            ])
+            .load_preset("     ──  ──        ")
+            .set_width(width)
+            .set_content_arrangement(ContentArrangement::DynamicFullWidth);
+
+        self.translations.iter().for_each(|(key, translation)| {
+            table.add_row(Row::from([
+                Cell::new(key)
+                    .fg(colors[idx as usize])
+                    .set_alignment(CellAlignment::Center),
+                Cell::new(translation).set_alignment(CellAlignment::Center),
+            ]));
+            counter += 1;
+            if counter % 3 == 0 {
+                idx = (idx + 1) % (colors.len() as u8);
+                counter %= 3;
+            }
+        });
+        table.to_string()
+    }
 }
 
 impl Translations {
@@ -93,6 +126,34 @@ impl Translations {
             i18n_dir: i18n_dir.to_string(),
             languages,
         })
+    }
+
+    /// Return table of translations for specific language
+    pub fn to_table(&self, lang_name: &str, width: u16) -> I18nResult<String> {
+        if !self.languages.is_empty() {
+            if let Some(lang) = self
+                .languages
+                .iter()
+                .find(|lang| lang.lang_name == lang_name)
+            {
+                if !lang.translations.is_empty() {
+                    Ok(lang.to_table(width))
+                } else {
+                    Err(I18nError::ThereIsNoTranslations(format!(
+                        "There is no translations in `{lang_name}`"
+                    )))
+                }
+            } else {
+                Err(I18nError::NonExistingLanguage(format!(
+                    "There is no language named '{lang_name}'",
+                )))
+            }
+        } else {
+            Err(I18nError::ThereIsNoLanguages(format!(
+                "There is no languages in '{}'",
+                self.i18n_dir
+            )))
+        }
     }
 
     /// Fill the missing keys for each language
