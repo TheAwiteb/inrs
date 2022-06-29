@@ -35,6 +35,7 @@ pub enum I18nError {
     ParseJson(String),
     WriteOnFile(String),
     ThereIsNoLanguages(String),
+    ThereIsNoTranslations(String),
     DeleteFile(String),
 }
 
@@ -51,6 +52,7 @@ impl I18nError {
             Self::ParseJson(s) => s,
             Self::WriteOnFile(s) => s,
             Self::ThereIsNoLanguages(s) => s,
+            Self::ThereIsNoTranslations(s) => s,
             Self::DeleteFile(s) => s,
         }
     }
@@ -67,6 +69,7 @@ impl I18nError {
             Self::ParseJson(_) => "ParseJson",
             Self::WriteOnFile(_) => "WriteOnFile",
             Self::ThereIsNoLanguages(_) => "ThereIsNoLanguages",
+            Self::ThereIsNoTranslations(_) => "ThereIsNoTranslations",
             Self::DeleteFile(_) => "DeleteFile",
         }
     }
@@ -89,6 +92,7 @@ impl Termination for I18nError {
                 // NonExistingLanguage
                 // NonExistingKey
                 // ThereIsNoLanguages
+                // ThereIsNoTranslations
                 // NonUtf8LanguageName
                 // ParseJson
                 ExitCode::from(1)
