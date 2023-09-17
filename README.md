@@ -13,12 +13,6 @@ Simple CLI to (add, delete, update, create) i18n translation file
 <a href="https://github.com/theawiteb/inrs">
   <img src="https://badge.fury.io/gh/theawiteb%2Finrs.svg" alt="version">
 </a>
-<a href="https://github.com/TheAwiteb/inrs/issues?q=is%3Aissue+is%3Aopen+">
-  <img src="https://img.shields.io/github/issues/theawiteb/inrs.svg" alt="issues-open">
-</a>
-<a href="https://github.com/TheAwiteb/inrs/issues?q=is%3Aissue+is%3Aclosed+">
-  <img src="https://img.shields.io/github/issues-closed/theawiteb/inrs.svg" alt="issues-closed">
-</a>
 <br>
 <a href="https://github.com/TheAwiteb/inrs/actions/workflows/ci.yml">
   <img src="https://github.com/TheAwiteb/inrs/actions/workflows/ci.yml/badge.svg" alt="Continuous Integration">
