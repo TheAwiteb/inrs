@@ -19,10 +19,10 @@ use colored::Colorize;
 use std::fs::read_dir;
 use std::path::Path;
 
-type VResult = Result<(), String>;
+type VResult<T> = Result<T, String>;
 
 /// validate i18n path
-pub fn validate_i18n_path(path: &str) -> VResult {
+pub fn validate_i18n_path(path: &str) -> VResult<String> {
     let i18n_dir = Path::new(path);
     if !i18n_dir.exists() {
         Err("There is no directory with this name 🚫".to_owned())
@@ -62,14 +62,14 @@ pub fn validate_i18n_path(path: &str) -> VResult {
                 Err(err) => return Err(format!("Cannot get entry, {err}")),
             }
         }
-        Ok(())
+        Ok(path.to_owned())
     } else {
         Err("Cannot read the i18n directory 📁".to_owned())
     }
 }
 
 /// Validate the name of language
-pub fn validate_lang_name(lang_name: &str) -> VResult {
+pub fn validate_lang_name(lang_name: &str) -> VResult<String> {
     if lang_name.contains('.') {
         return Err(format!(
             "'{}' is invalid name, did you means {}",
@@ -77,5 +77,5 @@ pub fn validate_lang_name(lang_name: &str) -> VResult {
             lang_name.split('.').next().unwrap().green()
         ));
     }
-    Ok(())
+    Ok(lang_name.to_owned())
 }
