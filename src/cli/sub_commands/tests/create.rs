@@ -26,8 +26,8 @@ fn test_create() -> IOResult<()> {
     create(i18n_path, "en_US");
     assert_eq!(list_i18n(i18n_path)?, to_json_list(vec!["en_US"]));
     create(i18n_path, "ar_SA");
-    assert!(list_i18n(i18n_path)?.contains(&String::from("en_US")));
-    assert!(list_i18n(i18n_path)?.contains(&String::from("ar_SA")));
+    assert!(dbg!(list_i18n(i18n_path)?).contains(&String::from("en_US.json")));
+    assert!(list_i18n(i18n_path)?.contains(&String::from("ar_SA.json")));
     delete_i18n(i18n_path)?;
     Ok(())
 }
