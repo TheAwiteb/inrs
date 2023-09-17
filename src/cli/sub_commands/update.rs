@@ -15,17 +15,20 @@
 //     You should have received a copy of the GNU General Public License
 //     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+use super::errors::I18nError;
 use super::utils::{Translation, Translations};
 use colored::Colorize;
 
 /// Add and update translations
-pub fn update(i18n_dir: &str, translation: Translation) {
+pub fn update(i18n_dir: &str, translation: Translation) -> Option<I18nError> {
     match Translations::new(i18n_dir) {
         Ok(mut translations) => {
             if let Err(err) = translations.update_translation(&translation) {
-                err.print()
+                err.print();
+                Some(err)
             } else if let Err(err) = translations.export() {
-                err.print()
+                err.print();
+                Some(err)
             } else {
                 println!(
                     "The translation of the '{}' key to '{}' has been successfully updated in '{}'",
@@ -33,8 +36,12 @@ pub fn update(i18n_dir: &str, translation: Translation) {
                     translation.translation.green(),
                     translation.lang_name.green()
                 );
+                None
             }
         }
-        Err(err) => err.print(),
-    };
+        Err(err) => {
+            err.print();
+            Some(err)
+        }
+    }
 }

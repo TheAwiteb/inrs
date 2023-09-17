@@ -17,23 +17,20 @@
 
 use super::errors::I18nError;
 use super::utils::Translations;
-use colored::Colorize;
 
-/// Create new translation file in i18n directory
-pub fn create(i18n_path: &str, lang: &str) -> Option<I18nError> {
+/// Print table of translations for specific language
+pub fn list_translations(i18n_path: &str, lang_name: &str, width: u16) -> Option<I18nError> {
     match Translations::new(i18n_path) {
-        Ok(mut translation) => {
-            if let Err(err) = translation.add_language(lang) {
-                err.print();
-                Some(err)
-            } else if let Err(err) = translation.export() {
-                err.print();
-                Some(err)
-            } else {
-                println!("Creating '{}' language successfully ✅", lang.green());
+        Ok(translation) => match translation.to_table(lang_name, width) {
+            Ok(table) => {
+                println!("{table}");
                 None
             }
-        }
+            Err(err) => {
+                err.print();
+                Some(err)
+            }
+        },
         Err(err) => {
             err.print();
             Some(err)

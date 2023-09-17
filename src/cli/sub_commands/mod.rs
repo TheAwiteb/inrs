@@ -17,6 +17,7 @@
 
 mod create;
 mod delete;
+mod list;
 #[cfg(test)]
 pub mod tests;
 mod update;
@@ -30,6 +31,7 @@ use clap::Subcommand;
 pub use {
     create::create,
     delete::{delete_key, delete_language},
+    list::list_translations,
     update::update,
     utils::Translation,
 };
@@ -75,5 +77,13 @@ pub enum Subcommands {
         #[clap(subcommand)]
         action: DeleteSubCommands,
     },
-    // TODO: Config command
+    /// List all translations for specific language 📊
+    List {
+        /// Language name to add/update in it 🆕
+        #[clap(short, long, value_parser = validate_lang_name)]
+        lang: String,
+        /// Row width 📏
+        #[clap(short, long, default_value = "40")]
+        width: u16,
+    },
 }
