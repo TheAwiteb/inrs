@@ -13,10 +13,10 @@ categories = ["command-line-utilities"]
 
 [dependencies]
 clap = { version = "= 3.1.18", features = ["derive"] }
-colored = "= 2.0.0"
+colored = "2.0.4"
 exitcode = "= 1.1.2"
-comfy-table = "= 6.0.0"
-serde_json = "= 1.0.81"
+comfy-table = "7.0.1"
+serde_json = "1.0.107"
 
 [profile.release]
 strip = true  # Automatically strip symbols from the binary.
