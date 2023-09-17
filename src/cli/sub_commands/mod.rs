@@ -41,7 +41,7 @@ pub use {
 pub enum DeleteSubCommands {
     /// Delete language from i18n directory 🗑️
     Lang {
-        #[clap(short, long, validator = validate_lang_name)]
+        #[clap(short, long, value_parser = validate_lang_name)]
         lang: String,
     },
     /// Delete translation from languages 🗑️
@@ -57,13 +57,13 @@ pub enum Subcommands {
     /// Create new language file 🔤
     Create {
         /// The language name 🔤
-        #[clap(short, long, validator = validate_lang_name)]
+        #[clap(short, long, value_parser = validate_lang_name)]
         lang: String,
     },
     /// Add/Update translation 🆕
     Update {
         /// Language name to add/update in it 🆕
-        #[clap(short, long, validator = validate_lang_name)]
+        #[clap(short, long, value_parser = validate_lang_name)]
         lang: String,
         /// The translation key 🗝
         #[clap(short, long)]
