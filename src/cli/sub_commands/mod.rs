@@ -80,7 +80,7 @@ pub enum Subcommands {
     /// List all translations for specific language 📊
     List {
         /// Language name to add/update in it 🆕
-        #[clap(short, long, validator = validate_lang_name)]
+        #[clap(short, long, value_parser = validate_lang_name)]
         lang: String,
         /// Row width 📏
         #[clap(short, long, default_value = "40")]
