@@ -19,7 +19,7 @@ mod cli;
 
 use cli::sub_commands::errors::I18nError;
 use cli::sub_commands::{
-    create, delete_key, delete_language, update, DeleteSubCommands, Subcommands,
+    create, delete_key, delete_language, list_translations, update, DeleteSubCommands, Subcommands,
 };
 use std::process::exit;
 
@@ -42,5 +42,8 @@ fn main() -> I18nError {
                 delete_key(app.path.as_str(), key.as_str()).unwrap_or_else(|| exit(0))
             }
         },
+        Subcommands::List { lang, width } => {
+            list_translations(app.path.as_str(), lang.as_str(), width).unwrap_or_else(|| exit(0))
+        }
     }
 }
